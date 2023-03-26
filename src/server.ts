@@ -1,10 +1,13 @@
+import expressApp from "./api/express";
 import config from "./config";
 import setUpWebsocket from "./websocket/websocket";
 
 (async () => {
-	const PORT = config.port;
 	const websocket = await setUpWebsocket();
 
-	websocket.listen(PORT);
-	console.log(`Listening on port ${PORT}`);
+	websocket.listen(config.websocketPort);
+	console.log(`Websocket running on ${config.websocketPort} port`);
+	expressApp.listen(config.apiPort, () => {
+		console.log(`Express running on ${config.apiPort} port`);
+	});
 })();
