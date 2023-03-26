@@ -2,12 +2,12 @@ import { Server } from "socket.io";
 
 import config from "../config";
 import WebsocketEvent from "../enums/WebsocketEvent";
-import { connect } from "../rabbitmq/rabbitmq";
-import createProjectService from "../services/createProjectService";
-import createUserService from "../services/createUserService";
-import getProjectListService from "../services/getProjectListService";
-import getProjectService from "../services/getProjectService";
-import updateProjectService from "../services/updateProjectService";
+import { connect } from "../rabbitmq";
+import createProjectService from "./services/createProjectService";
+import createUserService from "./services/createUserService";
+import getProjectListService from "./services/getProjectListService";
+import getProjectService from "./services/getProjectService";
+import updateProjectService from "./services/updateProjectService";
 import CreateProjectEventRequest from "../types/eventRequests/CreateProjectEventRequest";
 import CreateUserEventRequest from "../types/eventRequests/CreateUserEventRequest";
 import GetProjectEventRequest from "../types/eventRequests/GetProjectEventRequest";
@@ -16,7 +16,7 @@ import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEvent
 
 const setUpWebsocket = async () => {
 	const io = new Server();
-	const channel = await connect(
+	const { channel } = await connect(
 		config.projectTenderExchangeURL,
 		config.projectTenderExchange
 	);

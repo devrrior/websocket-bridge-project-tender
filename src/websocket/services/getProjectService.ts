@@ -1,9 +1,9 @@
 import amqp from "amqplib";
 
-import config from "../config";
-import { sendMessage } from "../rabbitmq/rabbitmq";
-import GetProjectEventRequest from "../types/eventRequests/GetProjectEventRequest";
-import GetProjectPayload from "../types/payloads/GetProjectPayload";
+import config from "../../config";
+import { sendMessage } from "../../rabbitmq";
+import GetProjectEventRequest from "../../types/eventRequests/GetProjectEventRequest";
+import GetProjectPayload from "../../types/payloads/GetProjectPayload";
 
 const ROUTING_KEY = "project.get";
 

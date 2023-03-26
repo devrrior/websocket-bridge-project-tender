@@ -1,17 +1,18 @@
 import amqp from "amqplib";
 
-import EventPayload from "../types/payloads/EventPayload";
+import EventPayload from "./types/payloads/EventPayload";
+import ConnectFunctionReturnType from "./types/returnTypes/ConnectFunctionReturnType";
 
 const connect = async (
 	url: string,
 	exchange: string
-): Promise<amqp.Channel> => {
+): Promise<ConnectFunctionReturnType> => {
 	const rabbitConfig = getRabbitConfig(url, 5672, "guest", "guest");
 	const connection = await amqp.connect(rabbitConfig);
 	const channel = await connection.createChannel();
 	await channel.assertExchange(exchange, "topic", { durable: true });
 
-	return channel;
+	return { channel, connection };
 };
 
 const sendMessage = async (

@@ -1,9 +1,9 @@
 import amqp from "amqplib";
 
-import config from "../config";
-import { sendMessage } from "../rabbitmq/rabbitmq";
-import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
-import UpdateProjectPayload from "../types/payloads/UpdateProjectPayload";
+import config from "../../config";
+import { sendMessage } from "../../rabbitmq";
+import UpdateProjectEventRequest from "../../types/eventRequests/UpdateProjectEventRequest";
+import UpdateProjectPayload from "../../types/payloads/UpdateProjectPayload";
 
 const ROUTING_KEY = "project.update";
 
