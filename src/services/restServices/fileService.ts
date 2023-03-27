@@ -11,7 +11,7 @@ cloudinary.config({
 	api_secret: config.cloudinaryAPISecret,
 });
 
-const uploadFileService = async (req: Request, res: Response) => {
+export const fileService = async (req: Request, res: Response) => {
 	const file = req.file;
 
 	if (!file) throw new Error("No se ha enviado ningún archivo");
@@ -24,5 +24,3 @@ const uploadFileService = async (req: Request, res: Response) => {
 
 	res.send({ url: fileUrl });
 };
-
-export default uploadFileService;

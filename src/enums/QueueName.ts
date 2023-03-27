@@ -1,6 +1,7 @@
 enum QueueName {
-	projectNew = "projectTender.project.new",
-	projectListNew = "projectTender.projectList.new",
+	newProject = "projectTender.project.new",
+	newProjectList = "projectTender.projectList.new",
+	newUser = "projectTender.user.new",
 }
 
 export default QueueName;

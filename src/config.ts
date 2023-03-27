@@ -12,6 +12,8 @@ const config = {
 	cloudinaryAPISecret: process.env.CLOUDINARY_API_SECRET as string,
 	rabbitMQUser: process.env.RABBITMQ_USER as string,
 	rabbitMQPassword: process.env.RABBITMQ_PASSWORD as string,
+	mongoURI: process.env.MONGO_URI as string,
+	JWTPrivateKey: process.env.JWT_PRIVATE_KEY as string,
 };
 
 export default config;

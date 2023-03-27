@@ -1,16 +1,18 @@
 import amqp from "amqplib";
+import { Server } from "socket.io";
 
 import config from "../../config";
 import { sendMessage } from "../../rabbitmq";
 import CreateUserEventRequest from "../../types/eventRequests/CreateUserEventRequest";
 import CreateUserPayload from "../../types/payloads/CreateUserPayload";
+import { createUser } from "../restServices/userService";
 
-const ROUTING_KEY = "user.create";
-
-const createUserService = async (
+export const createUserEventService = async (
 	channel: amqp.Channel,
 	eventRequest: CreateUserEventRequest
 ) => {
+	const ROUTING_KEY = "user.create";
+
 	const payload: CreateUserPayload = {
 		name: eventRequest.name,
 		email: eventRequest.email,
@@ -25,4 +27,15 @@ const createUserService = async (
 	);
 };
 
-export default createUserService;
+export const newUserEventService = (payload: string, _: Server) => {
+	const parsedPayload = JSON.parse(payload);
+	createUser(parsedPayload.email, parsedPayload.password, parsedPayload.roles)
+		.then(() => {
+			console.log("User created!");
+			return;
+		})
+		.catch((e) => {
+			console.log(e);
+			console.log("User not created!");
+		});
+};

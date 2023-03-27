@@ -2,19 +2,26 @@ import amqp from "amqplib";
 import { Server, Socket } from "socket.io";
 
 import config from "../config";
+import QueueName from "../enums/QueueName";
 import WebsocketEvent from "../enums/WebsocketEvent";
 import { connect } from "../rabbitmq";
+import {
+	createProjectEventService,
+	getProjectEventService,
+	getProjectListEventService,
+	newProjectEventService,
+	newProjectListEvent,
+	updateProjectEventService,
+} from "../services/eventServices/projectEventService";
+import {
+	createUserEventService,
+	newUserEventService,
+} from "../services/eventServices/userEventService";
 import CreateProjectEventRequest from "../types/eventRequests/CreateProjectEventRequest";
 import CreateUserEventRequest from "../types/eventRequests/CreateUserEventRequest";
 import GetProjectEventRequest from "../types/eventRequests/GetProjectEventRequest";
 import GetProjectListEventRequest from "../types/eventRequests/GetProjectListEventRequest";
 import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
-import createProjectService from "./services/createProjectService";
-import createUserService from "./services/createUserService";
-import getProjectListService from "./services/getProjectListService";
-import getProjectService from "./services/getProjectService";
-import updateProjectService from "./services/updateProjectService";
-import queueName from "../enums/QueueName";
 
 const setUpWebsocket = async () => {
 	const io = new Server();
@@ -35,7 +42,7 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.getProject,
 			(eventRequest: GetProjectEventRequest) => {
-				getProjectService(channelSender, eventRequest);
+				getProjectEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
 		);
@@ -43,7 +50,7 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.getProjectList,
 			(eventRequest: GetProjectListEventRequest) => {
-				getProjectListService(channelSender, eventRequest);
+				getProjectListEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
 		);
@@ -51,7 +58,7 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.createUser,
 			(eventRequest: CreateUserEventRequest) => {
-				createUserService(channelSender, eventRequest);
+				createUserEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
 		);
@@ -59,7 +66,7 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.createProject,
 			(eventRequest: CreateProjectEventRequest) => {
-				createProjectService(channelSender, eventRequest);
+				createProjectEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
 		);
@@ -67,7 +74,7 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.updateProject,
 			(eventPayload: UpdateProjectEventRequest) => {
-				updateProjectService(channelSender, eventPayload);
+				updateProjectEventService(channelSender, eventPayload);
 				console.log("Event sent!");
 			}
 		);
@@ -82,16 +89,20 @@ const setUpWebsocket = async () => {
 };
 
 const listenQueue = async (server: Server, connection: amqp.Connection) => {
-	const queueNames = [queueName.projectNew, queueName.projectListNew];
+	const queues = {
+		[QueueName.newProject]: newProjectEventService,
+		[QueueName.newProjectList]: newProjectListEvent,
+		[QueueName.newUser]: newUserEventService,
+	};
 	const channel = await connection.createChannel();
 
-	queueNames.map(async (queueName) => {
-		await channel.assertQueue(queueName);
+	Object.entries(queues).map(async ([name, fn]) => {
+		await channel.assertQueue(name);
 
-		await channel.consume(queueName, (payload) => {
+		await channel.consume(name, (payload) => {
 			if (payload !== null) {
-				console.log(payload.content.toString());
-				server.emit("project_new", payload.content.toString());
+				const parsedPayload = payload.content.toString();
+				fn(parsedPayload, server);
 				channel.ack(payload);
 			} else {
 				console.log("Consumer cancelled by server");
