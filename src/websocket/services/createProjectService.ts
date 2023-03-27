@@ -21,7 +21,7 @@ const createProjectService = async (
 
 	await sendMessage(
 		channel,
-		config.projectTenderExchange,
+		config.projectTenderExchangeName,
 		ROUTING_KEY,
 		payload
 	);

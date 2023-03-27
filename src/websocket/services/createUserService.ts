@@ -19,7 +19,7 @@ const createUserService = async (
 
 	await sendMessage(
 		channel,
-		config.projectTenderExchange,
+		config.projectTenderExchangeName,
 		ROUTING_KEY,
 		payload
 	);
