@@ -22,6 +22,7 @@ import CreateUserEventRequest from "../types/eventRequests/CreateUserEventReques
 import GetProjectEventRequest from "../types/eventRequests/GetProjectEventRequest";
 import GetProjectListEventRequest from "../types/eventRequests/GetProjectListEventRequest";
 import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
+import { verifyJWT } from "../services/restServices/authService";
 
 const setUpWebsocket = async () => {
 	const io = new Server();
@@ -38,6 +39,11 @@ const setUpWebsocket = async () => {
 
 	io.on("connection", async (socket: Socket) => {
 		console.log(`User with ID ${socket.id} has connected`);
+		const jwt = socket.handshake.query.token as string;
+
+		const email = verifyJWT(jwt);
+
+		if (!email) return socket.disconnect();
 
 		socket.on(
 			WebsocketEvent.getProject,

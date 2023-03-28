@@ -43,3 +43,15 @@ const verifyPassword = async (
 const generateJWTToken = (email: string) => {
 	return jwt.sign({ email }, config.JWTPrivateKey);
 };
+
+export const verifyJWT = (token: string): string | null => {
+	try {
+		const payload = jwt.verify(token, config.JWTPrivateKey);
+
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		return payload.email;
+	} catch (e) {
+		return null;
+	}
+};
