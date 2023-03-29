@@ -1,10 +1,12 @@
+import cors from "cors";
 import express from "express";
 
-import fileController from "./controllers/fileController";
 import authController from "./controllers/authController";
+import fileController from "./controllers/fileController";
 
 const expressApp = express();
 
+expressApp.use(cors());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
 
