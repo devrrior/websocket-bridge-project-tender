@@ -1,17 +1,17 @@
 import amqp from "amqplib";
+import { Server } from "socket.io";
 
 import config from "../../config";
+import WebsocketEvent from "../../enums/WebsocketEvent";
 import { sendMessage } from "../../rabbitmq";
 import CreateProjectEventRequest from "../../types/eventRequests/CreateProjectEventRequest";
 import GetProjectEventRequest from "../../types/eventRequests/GetProjectEventRequest";
-import CreateProjectPayload from "../../types/payloads/CreateProjectPayload";
-import GetProjectPayload from "../../types/payloads/GetProjectPayload";
 import GetProjectListEventRequest from "../../types/eventRequests/GetProjectListEventRequest";
-import GetProjectListPayload from "../../types/payloads/GetProjectListPayload";
 import UpdateProjectEventRequest from "../../types/eventRequests/UpdateProjectEventRequest";
+import CreateProjectPayload from "../../types/payloads/CreateProjectPayload";
+import GetProjectListPayload from "../../types/payloads/GetProjectListPayload";
+import GetProjectPayload from "../../types/payloads/GetProjectPayload";
 import UpdateProjectPayload from "../../types/payloads/UpdateProjectPayload";
-import { Server } from "socket.io";
-import WebsocketEvent from "../../enums/WebsocketEvent";
 
 export const createProjectEventService = async (
 	channel: amqp.Channel,
@@ -51,8 +51,6 @@ export const getProjectEventService = async (
 	);
 };
 
-
-
 export const getProjectListEventService = async (
 	channel: amqp.Channel,
 	eventRequest: GetProjectListEventRequest
@@ -77,11 +75,8 @@ export const updateProjectEventService = async (
 ) => {
 	const ROUTING_KEY = "project.update";
 	const payload: UpdateProjectPayload = {
-		name: eventRequest.name,
-		description: eventRequest.description,
-		budget: eventRequest.budget,
-		type: eventRequest.type,
-		imageURL: eventRequest.imageURL,
+		id: eventRequest.id,
+		responsibleConstructor: eventRequest.responsibleConstructor,
 	};
 
 	await sendMessage(

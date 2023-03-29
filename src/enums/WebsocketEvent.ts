@@ -6,6 +6,7 @@ enum WebsocketEvent {
 	updateProject = "update_project_event",
 	newProject = "new_project_event",
 	newProjectList = "new_project_list_event",
+	currentUser = "current_user_event",
 }
 
 export default WebsocketEvent;

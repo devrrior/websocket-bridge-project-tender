@@ -6,6 +6,7 @@ import { sendMessage } from "../../rabbitmq";
 import CreateUserEventRequest from "../../types/eventRequests/CreateUserEventRequest";
 import CreateUserPayload from "../../types/payloads/CreateUserPayload";
 import { createUser } from "../restServices/userService";
+import WebsocketEvent from "../../enums/WebsocketEvent";
 
 export const createUserEventService = async (
 	channel: amqp.Channel,
@@ -38,4 +39,8 @@ export const newUserEventService = (payload: string, _: Server) => {
 			console.log(e);
 			console.log("User not created!");
 		});
+};
+
+export const currentUserEventService = (payload: string, server: Server) => {
+	server.emit(WebsocketEvent.currentUser, payload);
 };

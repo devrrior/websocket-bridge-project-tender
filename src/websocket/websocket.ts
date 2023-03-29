@@ -15,6 +15,7 @@ import {
 } from "../services/eventServices/projectEventService";
 import {
 	createUserEventService,
+	currentUserEventService,
 	newUserEventService,
 } from "../services/eventServices/userEventService";
 import { verifyJWT } from "../services/restServices/authService";
@@ -96,6 +97,7 @@ const listenQueue = async (server: Server, connection: amqp.Connection) => {
 		[QueueName.newProject]: newProjectEventService,
 		[QueueName.newProjectList]: newProjectListEvent,
 		[QueueName.newUser]: newUserEventService,
+		[QueueName.currentUser]: currentUserEventService,
 	};
 	const channel = await connection.createChannel();
 
