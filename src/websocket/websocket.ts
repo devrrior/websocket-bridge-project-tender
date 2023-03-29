@@ -17,12 +17,12 @@ import {
 	createUserEventService,
 	newUserEventService,
 } from "../services/eventServices/userEventService";
+import { verifyJWT } from "../services/restServices/authService";
 import CreateProjectEventRequest from "../types/eventRequests/CreateProjectEventRequest";
 import CreateUserEventRequest from "../types/eventRequests/CreateUserEventRequest";
 import GetProjectEventRequest from "../types/eventRequests/GetProjectEventRequest";
 import GetProjectListEventRequest from "../types/eventRequests/GetProjectListEventRequest";
 import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
-import { verifyJWT } from "../services/restServices/authService";
 
 const setUpWebsocket = async () => {
 	const io = new Server();
@@ -32,10 +32,7 @@ const setUpWebsocket = async () => {
 		config.rabbitMQPassword
 	);
 
-	const channelSender = await getChannelWithExchange(
-		connection,
-		config.projectTenderExchangeName
-	);
+	const channelSender = await getChannelWithExchange(connection);
 
 	io.on("connection", async (socket: Socket) => {
 		console.log(`User with ID ${socket.id} has connected`);
@@ -103,8 +100,6 @@ const listenQueue = async (server: Server, connection: amqp.Connection) => {
 	const channel = await connection.createChannel();
 
 	Object.entries(queues).map(async ([name, fn]) => {
-		await channel.assertQueue(name);
-
 		await channel.consume(name, (payload) => {
 			if (payload !== null) {
 				const parsedPayload = payload.content.toString();
@@ -118,15 +113,9 @@ const listenQueue = async (server: Server, connection: amqp.Connection) => {
 };
 
 const getChannelWithExchange = async (
-	connection: amqp.Connection,
-	exchangeName: string
+	connection: amqp.Connection
 ): Promise<amqp.Channel> => {
-	const channel = await connection.createChannel();
-	await channel.assertExchange(exchangeName, "topic", {
-		durable: true,
-	});
-
-	return channel;
+	return await connection.createChannel();
 };
 
 export default setUpWebsocket;
