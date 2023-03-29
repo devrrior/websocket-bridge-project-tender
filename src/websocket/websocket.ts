@@ -26,7 +26,11 @@ import GetProjectListEventRequest from "../types/eventRequests/GetProjectListEve
 import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
 
 const setUpWebsocket = async () => {
-	const io = new Server();
+	const io = new Server({
+		cors: {
+			origin: "*",
+		},
+	});
 	const connection = await connect(
 		config.projectTenderExchangeURL,
 		config.rabbitMQUser,
