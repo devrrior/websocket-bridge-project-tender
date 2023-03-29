@@ -4,7 +4,7 @@ type CreateProjectEventRequest = {
 	name: string;
 	description: string;
 	budget: number;
-	type: ProjectType;
+	type: string;
 	imageURL: string;
 };
 

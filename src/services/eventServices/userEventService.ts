@@ -2,11 +2,11 @@ import amqp from "amqplib";
 import { Server } from "socket.io";
 
 import config from "../../config";
+import WebsocketEvent from "../../enums/WebsocketEvent";
 import { sendMessage } from "../../rabbitmq";
 import CreateUserEventRequest from "../../types/eventRequests/CreateUserEventRequest";
 import CreateUserPayload from "../../types/payloads/CreateUserPayload";
 import { createUser } from "../restServices/userService";
-import WebsocketEvent from "../../enums/WebsocketEvent";
 
 export const createUserEventService = async (
 	channel: amqp.Channel,
@@ -29,6 +29,7 @@ export const createUserEventService = async (
 };
 
 export const newUserEventService = (payload: string, _: Server) => {
+	console.log("entra a new user event");
 	const parsedPayload = JSON.parse(payload);
 	createUser(parsedPayload.email, parsedPayload.password, parsedPayload.roles)
 		.then(() => {
