@@ -39,13 +39,13 @@ const setUpWebsocket = async () => {
 		console.log(`User with ID ${socket.id} has connected`);
 		const jwt = socket.handshake.query.token as string;
 
-		const email = verifyJWT(jwt);
-
-		if (!email) return socket.disconnect();
-
 		socket.on(
 			WebsocketEvent.getProject,
 			(eventRequest: GetProjectEventRequest) => {
+				const email = verifyJWT(jwt);
+
+				if (!email) return socket.disconnect();
+
 				getProjectEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
@@ -54,6 +54,10 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.getProjectList,
 			(eventRequest: GetProjectListEventRequest) => {
+				const email = verifyJWT(jwt);
+
+				if (!email) return socket.disconnect();
+
 				getProjectListEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
@@ -70,6 +74,10 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.createProject,
 			(eventRequest: CreateProjectEventRequest) => {
+				const email = verifyJWT(jwt);
+
+				if (!email) return socket.disconnect();
+
 				createProjectEventService(channelSender, eventRequest);
 				console.log("Event sent!");
 			}
@@ -78,6 +86,10 @@ const setUpWebsocket = async () => {
 		socket.on(
 			WebsocketEvent.updateProject,
 			(eventPayload: UpdateProjectEventRequest) => {
+				const email = verifyJWT(jwt);
+
+				if (!email) return socket.disconnect();
+
 				updateProjectEventService(channelSender, eventPayload);
 				console.log("Event sent!");
 			}
