@@ -26,7 +26,7 @@ export const createJWTToken = async (
 		return;
 	}
 
-	const token = generateJWTToken(email);
+	const token = generateJWTToken(user.email, user.name);
 
 	res.status(201);
 	res.send({ token });
@@ -40,7 +40,7 @@ const verifyPassword = async (
 	return await bcrypt.compare(password, hashedPassword);
 };
 
-const generateJWTToken = (email: string) => {
+const generateJWTToken = (email: string, name: string) => {
 	return jwt.sign({ email }, config.JWTPrivateKey);
 };
 
