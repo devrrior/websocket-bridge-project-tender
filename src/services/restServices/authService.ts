@@ -41,7 +41,7 @@ const verifyPassword = async (
 };
 
 const generateJWTToken = (email: string, name: string) => {
-	return jwt.sign({ email }, config.JWTPrivateKey);
+	return jwt.sign({ email, name }, config.JWTPrivateKey);
 };
 
 export const verifyJWT = (token: string): string | null => {
