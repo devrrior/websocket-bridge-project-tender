@@ -3,9 +3,10 @@ import { IUser, User } from "../../schemas/userSchema";
 export const createUser = async (
 	email: string,
 	password: string,
+	name: string,
 	roles: string[]
 ) => {
-	const user = new User({ email, password, roles });
+	const user = new User({ email, password, name, roles });
 
 	await user.save();
 };

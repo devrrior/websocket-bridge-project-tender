@@ -31,7 +31,12 @@ export const createUserEventService = async (
 export const newUserEventService = (payload: string, _: Server) => {
 	console.log("entra a new user event");
 	const parsedPayload = JSON.parse(payload);
-	createUser(parsedPayload.email, parsedPayload.password, parsedPayload.roles)
+	createUser(
+		parsedPayload.email,
+		parsedPayload.password,
+		parsedPayload.name,
+		parsedPayload.roles
+	)
 		.then(() => {
 			console.log("User created!");
 			return;
