@@ -25,6 +25,8 @@ import GetProjectEventRequest from "../types/eventRequests/GetProjectEventReques
 import GetProjectListEventRequest from "../types/eventRequests/GetProjectListEventRequest";
 import UpdateProjectEventRequest from "../types/eventRequests/UpdateProjectEventRequest";
 
+const users = new Set();
+
 const setUpWebsocket = async () => {
 	const io = new Server({
 		cors: {
@@ -40,8 +42,12 @@ const setUpWebsocket = async () => {
 	const channelSender = await getChannelWithExchange(connection);
 
 	io.on("connection", async (socket: Socket) => {
+		if (users.size > 5) socket.disconnect();
+		else users.add(socket.id);
+
 		console.log(`User with ID ${socket.id} has connected`);
 		const jwt = socket.handshake.query.token as string;
+		console.log(jwt);
 
 		socket.on(
 			WebsocketEvent.getProject,
@@ -100,9 +106,11 @@ const setUpWebsocket = async () => {
 		);
 
 		socket.on("disconnect", () => {
+			users.delete(socket.id);
 			console.log(`A user has disconnected ${socket.id}`);
 		});
 	});
+
 	await listenQueue(io, connection);
 
 	return io;

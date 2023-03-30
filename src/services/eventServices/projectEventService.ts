@@ -92,5 +92,5 @@ export const newProjectEventService = (payload: string, server: Server) => {
 };
 
 export const newProjectListEvent = (payload: string, server: Server) => {
-	server.emit(WebsocketEvent.newProject, payload);
+	server.emit(WebsocketEvent.newProjectList, payload);
 };
