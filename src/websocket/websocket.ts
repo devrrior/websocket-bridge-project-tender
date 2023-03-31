@@ -30,7 +30,7 @@ const users = new Set();
 const setUpWebsocket = async () => {
 	const io = new Server({
 		cors: {
-			origin: "https://fer.software/",
+			origin: "https://fer.software",
 			methods: ["GET", "POST"],
 		},
 	});
