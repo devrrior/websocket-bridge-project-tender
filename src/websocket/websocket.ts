@@ -30,7 +30,8 @@ const users = new Set();
 const setUpWebsocket = async () => {
 	const io = new Server({
 		cors: {
-			origin: "*",
+			origin: "https://fer.software/login",
+			methods: ["GET", "POST"],
 		},
 	});
 	const connection = await connect(
@@ -47,7 +48,6 @@ const setUpWebsocket = async () => {
 
 		console.log(`User with ID ${socket.id} has connected`);
 		const jwt = socket.handshake.query.token as string;
-		console.log(jwt);
 
 		socket.on(
 			WebsocketEvent.getProject,
@@ -107,6 +107,7 @@ const setUpWebsocket = async () => {
 
 		socket.on("disconnect", () => {
 			users.delete(socket.id);
+			socket.leave(socket.id);
 			console.log(`A user has disconnected ${socket.id}`);
 		});
 	});
